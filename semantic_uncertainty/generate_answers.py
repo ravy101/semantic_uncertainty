@@ -161,12 +161,12 @@ def main(args):
                 embedding = embedding.cpu() if embedding is not None else None
 
                 # Only compute accuracy if question is answerable.
-                compute_acc = args.compute_accuracy_at_all_temps or (i == 0)
-                if correct_answer and compute_acc:
-                    acc = metric(predicted_answer, example, model)
-                else:
-                    acc = 0.0  # pylint: disable=invalid-name
-
+                #compute_acc = args.compute_accuracy_at_all_temps or (i == 0)
+                #if correct_answer and compute_acc:
+                #    acc = metric(predicted_answer, example, model)
+                #else:
+                    #acc = 0.0  # pylint: disable=invalid-name
+                acc = 0.0
                 if i == 0:
                     logging.info('Iteration ' + str(it) + ':  ' + 80*'#')
                     if args.use_context:
@@ -184,7 +184,8 @@ def main(args):
                         'accuracy': acc}
                     generations[example['id']].update({
                         'most_likely_answer': most_likely_answer_dict,
-                        'reference': utils.get_reference(example)})
+                        #'reference': utils.get_reference(example)
+                        'reference': "" })
 
                 else:
                     logging.info('high-t prediction '.ljust(15) + str(i) + ' : ' + predicted_answer)
@@ -204,13 +205,7 @@ def main(args):
         print(f"Overall {dataset_split} split accuracy: {accuracy}")
         wandb.log({f"{dataset_split}_accuracy": accuracy})
 
-        if dataset_split == 'validation':
-            if args.compute_p_true:
-                results_dict['uncertainty_measures'] = {
-                    'p_false':  [1 - p for p in p_trues],
-                    'p_false_fixed':  [1 - np.exp(p) for p in p_trues],
-                }
-            utils.save(results_dict, 'uncertainty_measures.pkl')
+        utils.save(results_dict, f'{dataset_split}_uncertainty_measures.pkl')
 
     utils.save(experiment_details, 'experiment_details.pkl')
     logging.info('Run complete.')
