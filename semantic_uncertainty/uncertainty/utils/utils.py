@@ -264,9 +264,9 @@ def get_gpt_metric(metric_name):
 
 
 def get_reference(example):
-    if 'answers' not in example:
+    if 'answer' not in example:
         example = example['reference']
-    answers = example['answers']
+    answers = example['answer']
     answer_starts = answers.get('answer_start', [])
     reference = {'answers': {'answer_start': answer_starts, 'text': answers['text']}, 'id': example['id']}
     return reference
