@@ -122,6 +122,7 @@ def main(args):
             logging.warning('Not enough samples in dataset. Using all %d samples.', len(dataset))
 
         it = 0
+        indices = list(range(args.num_samples))
         for index in tqdm(indices):
             if (it + 1 % 10) == 0:
                 gc.collect()
