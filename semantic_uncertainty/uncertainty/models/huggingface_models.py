@@ -204,3 +204,4 @@ class HuggingfaceModel(BaseModel):
             outputs = self.model(tokenized.input_ids, labels=target_ids)
         
         return -outputs.loss.item()
+    

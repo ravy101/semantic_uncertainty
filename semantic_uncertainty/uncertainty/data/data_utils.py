@@ -51,7 +51,6 @@ def load_ds(dataset_name, seed, add_options=None):
         train_dataset = dataset['train']
         validation_dataset = dataset['test']
 
-    elif dataset_name == "bioasq":
         # http://participants-area.bioasq.org/datasets/ we are using training 11b
         # could also download from here https://zenodo.org/records/7655130
         scratch_dir = os.getenv('SCRATCH_DIR', '.')
@@ -67,8 +66,8 @@ def load_ds(dataset_name, seed, add_options=None):
         }
 
         for question in questions:
-            if "exact_answer" not in question:
-                continue
+            #if "exact_answer" not in question:
+            #    continue
             dataset_dict["question"].append(question["body"])
             if "exact_answer" in question:
 
