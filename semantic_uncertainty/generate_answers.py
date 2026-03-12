@@ -89,28 +89,6 @@ def main(args):
     model = utils.init_model(args)
 
     # Initialize prompt for p_true baseline.
-    if args.compute_p_true:
-        logging.info(80*'#')
-        logging.info('Constructing few-shot prompt for p_true.')
-
-        p_true_indices = random.sample(answerable_indices, args.p_true_num_fewshot)
-        remaining_answerable = list(set(remaining_answerable) - set(p_true_indices))
-        p_true_few_shot_prompt, p_true_responses, len_p_true = p_true_utils.construct_few_shot_prompt(
-            model=model, dataset=train_dataset, indices=p_true_indices,
-            prompt=prompt, brief=BRIEF,
-            brief_always=args.brief_always and args.enable_brief,
-            make_prompt=make_prompt, num_generations=args.num_generations,
-            metric=metric)
-        wandb.config.update(
-            {'p_true_num_fewshot': len_p_true}, allow_val_change=True)
-        wandb.log(dict(len_p_true=len_p_true))
-        experiment_details['p_true_indices'] = p_true_indices
-        experiment_details['p_true_responses'] = p_true_responses
-        experiment_details['p_true_few_shot_prompt'] = p_true_few_shot_prompt
-        logging.info('Finished constructing few-shot prompt for p_true.')
-        logging.info(80*'#')
-        logging.info('p_true_few_shot_prompt: %s', p_true_few_shot_prompt)
-        logging.info(80*'#')
 
     # Start answer generation.
     logging.info(80 * '=')
@@ -136,7 +114,8 @@ def main(args):
             possible_indices = range(0, len(dataset))
 
         # Evaluate over random subset of the datasets.
-        indices = random.sample(possible_indices, min(args.num_samples, len(dataset)))
+        #indices = random.sample(possible_indices, min(args.num_samples, len(dataset)))
+        indices = possible_indices
         experiment_details[dataset_split] = {'indices': indices}
 
         if args.num_samples > len(dataset):
@@ -153,7 +132,7 @@ def main(args):
             example = dataset[index]
             question, context = example["question"], example['context']
             generations[example['id']] = {'question': question, 'context': context}
-            correct_answer = example['answers']['text']
+            correct_answer = example["answer"]["normalized_value"]
 
             current_input = make_prompt(
                 context, question, None, BRIEF, args.brief_always and args.enable_brief)
@@ -216,14 +195,6 @@ def main(args):
             # Append all predictions for this example to `generations`.
             generations[example['id']]['responses'] = full_responses
 
-            if args.compute_p_true and dataset_split == 'validation':
-                # Already compute p_true here. Avoid cost of generations in compute_uncertainty script.
-                p_true = p_true_utils.calculate_p_true(
-                    model, question, most_likely_answer_dict['response'],
-                    [r[0] for r in full_responses], p_true_few_shot_prompt,
-                    hint=args.p_true_hint)
-                p_trues.append(p_true)
-                logging.info('p_true: %s', p_true)
 
         # Save generations for that split.
         utils.save(generations, f'{dataset_split}_generations.pkl')
