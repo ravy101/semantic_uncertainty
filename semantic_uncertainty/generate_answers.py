@@ -130,7 +130,7 @@ def main(args):
 
             # Grab example at index.
             example = dataset[index]
-            question, context = example["question"], example['context']
+            question, context = example["question"], ""
             generations[example['id']] = {'question': question, 'context': context}
             correct_answer = example["answer"]["normalized_value"]
 
