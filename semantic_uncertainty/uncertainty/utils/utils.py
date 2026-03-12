@@ -180,7 +180,7 @@ def split_dataset(dataset):
     """Get indices of answerable and unanswerable questions."""
 
     def clen(ex):
-        return len(ex["answers"]["text"])
+        return len(ex["answer"]["normalized_value"])
 
     answerable_indices = [i for i, ex in enumerate(dataset) if clen(ex) > 0]
     unanswerable_indices = [i for i, ex in enumerate(dataset) if clen(ex) == 0]
@@ -196,8 +196,8 @@ def split_dataset(dataset):
 
 
 def model_based_metric(predicted_answer, example, model):
-    if 'answers' in example:
-        correct_answers = example['answers']['text']
+    if 'answer' in example:
+        correct_answers = example["answer"]["normalized_value"]
     elif 'reference' in example:
         correct_answers = example['reference']['answers']['text']
     else:
