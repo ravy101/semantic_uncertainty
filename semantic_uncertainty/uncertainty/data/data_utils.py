@@ -46,7 +46,7 @@ def load_ds(dataset_name, seed, add_options=None):
 
     elif dataset_name == "trivia_qa":
         #dataset = datasets.load_dataset('TimoImhof/TriviaQA-in-SQuAD-format')['unmodified']
-        dataset = datasets.load_dataset('mandarjoshi/trivia_qa')['rc']
+        dataset = datasets.load_dataset('mandarjoshi/trivia_qa', 'rc')
         #dataset = dataset.train_test_split(test_size=0.2, seed=seed)
         train_dataset = dataset['train']
         validation_dataset = dataset['test']
