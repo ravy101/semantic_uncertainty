@@ -167,9 +167,9 @@ def construct_fewshot_prompt_from_indices(dataset, example_indices, brief, brief
     for example_index in example_indices:
 
         example = dataset[example_index]
-        context = example["context"]
+        context = ""
         question = example["question"]
-        answer = example["answers"]["text"][0]
+        answer = example["answer"]["normalized_value"]
 
         prompt = prompt + make_prompt(context, question, answer, brief, brief_always)
 
