@@ -162,12 +162,12 @@ def main(args):
         metric = utils.get_metric(args.metric)
 
     # Restore outputs from `generate_answrs.py` run.
-    result_dict_pickle = restore('uncertainty_measures.pkl')
+    result_dict_pickle = restore(f'train_uncertainty_measures.pkl')
     with open(result_dict_pickle.name, "rb") as infile:
         result_dict = pickle.load(infile)
     result_dict['semantic_ids'] = []
 
-    validation_generations_pickle = restore('validation_generations.pkl')
+    validation_generations_pickle = restore('train_generations.pkl')
     with open(validation_generations_pickle.name, 'rb') as infile:
         validation_generations = pickle.load(infile)
 
@@ -177,7 +177,7 @@ def main(args):
     count = 0  # pylint: disable=invalid-name
 
     def is_answerable(generation):
-        return len(generation['reference']['answers']['text']) > 0
+        return True#len(generation['reference']['answers']['text']) > 0
 
     # Loop over datapoints and compute validation embeddings and entropies.
     for idx, tid in enumerate(validation_generations):
@@ -330,7 +330,7 @@ def main(args):
         result_dict['uncertainty_measures']['p_false'] = [1 - p for p in p_trues]
         result_dict['uncertainty_measures']['p_false_fixed'] = [1 - np.exp(p) for p in p_trues]
 
-    utils.save(result_dict, 'uncertainty_measures.pkl')
+    utils.save(result_dict, 'eval_uncertainty_measures.pkl')
 
     if args.compute_predictive_entropy:
         entailment_model.save_prediction_cache()
