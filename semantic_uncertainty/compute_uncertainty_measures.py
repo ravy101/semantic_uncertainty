@@ -234,6 +234,7 @@ def main(args):
                 responses, model=entailment_model,
                 strict_entailment=args.strict_entailment, example=example)
 
+            print(semantic_ids)
             result_dict['semantic_ids'].append(semantic_ids)
 
             # Compute entropy from frequencies of cluster assignments.
