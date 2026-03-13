@@ -343,7 +343,7 @@ def main(args):
         # Follow up with computation of aggregate performance metrics.
         logging.info(50 * '#X')
         logging.info('STARTING `analyze_run`!')
-        analyze_run(wandb.run.id)
+        #analyze_run(wandb.run.id)
         logging.info(50 * '#X')
         logging.info('FINISHED `analyze_run`!')
 
