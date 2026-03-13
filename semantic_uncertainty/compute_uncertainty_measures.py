@@ -110,6 +110,7 @@ def main(args):
             entailment_model = EntailmentLlama(args.entailment_cache_id, args.entailment_cache_only, args.entailment_model)
         else:
             raise ValueError
+        logging.info(f'{args.entailment_model}')
         logging.info('Entailment model loading complete.')
 
     if args.compute_p_true_in_compute_stage:
@@ -234,7 +235,7 @@ def main(args):
                 responses, model=entailment_model,
                 strict_entailment=args.strict_entailment, example=example)
 
-            print(semantic_ids)
+            logging.info(semantic_ids)
             result_dict['semantic_ids'].append(semantic_ids)
 
             # Compute entropy from frequencies of cluster assignments.
