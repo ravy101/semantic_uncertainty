@@ -231,6 +231,8 @@ def main(args):
                 responses = [f'{question} {r}' for r in responses]
 
             # Compute semantic ids.
+            logging.info(responses)
+            logging.info(example)
             semantic_ids = get_semantic_ids(
                 responses, model=entailment_model,
                 strict_entailment=args.strict_entailment, example=example)
